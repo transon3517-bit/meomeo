@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đếm ngược sinh nhật Meo 💖</title>
+  <style>
+    /*
+      Trang đếm ngược mở quà cho Meo 💖
+    */
+    body {
+      margin: 0;
+      height: 100vh;
+      /* Gradient nền nhẹ nhàng, lãng mạn hơn */
+      background: linear-gradient(135deg, #fff0f5 0%, #ffe4e1 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: Georgia, 'Times New Roman', Times, serif;
+      text-align: center;
+      color: #55444b; /* Màu chữ ấm hơn */
+    }
+    /* Tiêu đề màu hồng nổi bật */
+    h1 {
+      font-size: 2.2rem;
+      margin-bottom: 25px;
+      color: #ff4d88;
+      text-shadow: 0 2px 4px rgba(255, 77, 136, 0.2);
+    }
+    /* Hộp đếm ngược */
+    #countdown {
+      display: flex;
+      gap: 15px;
+      font-size: 1.5rem;
+      margin-bottom: 35px;
+    }
+    /* Ô hiển thị thời gian */
+    .time-box {
+      background: rgba(255, 255, 255, 0.8); /* Bán trong suốt */
+      padding: 15px 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(255, 182, 193, 0.3); /* Shadow hồng nhẹ */
+      min-width: 70px;
+      backdrop-filter: blur(5px);
+    }
+    .time-box span {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #ff4d88;
+    }
+    /* Nút mở quà */
+    button {
+      padding: 15px 50px;
+      font-size: 1.2rem;
+      font-family: Georgia, serif;
+      font-weight: bold;
+      background-color: #ff8fab; /* Màu hồng phấn nhẹ hơn */
+      color: white;
+      border: none;
+      border-radius: 30px; /* Bo tròn hơn */
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(255, 143, 171, 0.4);
+    }
+    /* Hiệu ứng hover khi nút khả dụng */
+    button:hover:enabled {
+      background-color: #ff4d88;
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(255, 77, 136, 0.5);
+    }
+    /* Trạng thái nút bị khóa */
+    button:disabled {
+      background-color: #e0c0c8;
+      color: #fff;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+    /* Dòng thông báo cho người dùng */
+    #message {
+      margin-top: 25px;
+      font-size: 1.2rem;
+      color: #8c4a5d;
+      font-weight: 500;
+      min-height: 1.4em;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>💖 Sắp tới giờ ròi Meo ơii 💖</h1>
+  <div id="countdown">
+    <div class="time-box"><span id="hours">00</span><br>Giờ</div>
+    <div class="time-box"><span id="minutes">00</span><br>Phút</div>
+    <div class="time-box"><span id="seconds">00</span><br>Giây</div>
+  </div>
+
+  <button id="giftButton" disabled>🎁 Chờ xíu nha...</button>
+  <div id="message">Đang đếm ngược từng giây... ⏳</div>
+
+  <script>
+    const button = document.getElementById('giftButton');
+    const message = document.getElementById('message');
+
+    // Đếm ngược tới 00:00 29/11/2025 theo giờ TP.HCM (UTC+7)
+    // Mốc UTC tương ứng: 2025-11-28T17:00:00Z
+    const targetUTC = new Date('2025-11-28T17:00:00Z').getTime();
+    let timerId = null;
+
+    function renderCountdown(ms) {
+      const total = Math.max(0, ms);
+      const sec = Math.floor(total / 1000);
+      const hoursTotal = Math.floor(sec / 3600); // tổng số giờ còn lại (bao gồm ngày)
+      const minutes = Math.floor((sec % 3600) / 60);
+      const seconds = sec % 60;
+      document.getElementById('hours').textContent = String(hoursTotal).padStart(2, '0');
+      document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+      document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+    }
+
+    function tick() {
+      const now = Date.now();
+      const remainingMs = targetUTC - now;
+      if (remainingMs <= 0) {
+        clearInterval(timerId);
+        renderCountdown(0);
+        button.disabled = false;
+        button.textContent = '🎁 Mở quà ngay! 🎁';
+        message.textContent = '🎉 Tới giờ rồi! Bấm nút đi Meo Meo 💖';
+        button.style.animation = 'pulse 1.5s infinite';
+        return;
+      }
+      renderCountdown(remainingMs);
+    }
+
+    // Khởi động
+    tick();
+    timerId = setInterval(tick, 1000);
+
+    button.addEventListener("click", () => {
+      if (button.disabled) {
+        message.textContent = "⏳ Bình tĩnh nào Babi, chưa tới giờ đâu 💞";
+      } else {
+        message.textContent = "💖 Đang mở món quà bí mật... Yêu Meo Meo 💖";
+        button.style.animation = "none";
+        setTimeout(() => window.location.href = "main.html", 500);
+      }
+    });
+  </script>
+  
+  <style>
+      @keyframes pulse {
+          0% { transform: scale(1); }
+          50% { transform: scale(1.05); box-shadow: 0 8px 20px rgba(255, 77, 136, 0.6); }
+          100% { transform: scale(1); }
+      }
+  </style>
+
+</body>
+</html>

@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Món quà của Meo 💝</title>
+  <style>
+/* --- THAY ĐỔI CHÍNH TẠI ĐÂY --- */
+/* Nền trắng pha hồng siêu nhẹ, font chữ lãng mạn */
+body {
+  /* Đã đổi từ màu đen #121212 sang màu trắng hồng nhẹ */
+  background-color: #fff5f8;
+  text-align: center;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  overflow-x: hidden;
+  margin: 0;
+  /* Thêm một chút hiệu ứng chuyển màu nền nhẹ nhàng */
+  background-image: linear-gradient(to bottom, #fff5f8, #ffeef2);
+  min-height: 100vh;
+}
+
+/* Top heading always visible and centered */
+#topHeading {
+  margin: 20px 0 10px;
+  font-size: 2.8rem;
+  line-height: 1.5;
+  text-align: center;
+  color: #ff4d88;
+}
+/* Allow glow animation on top heading when class is present */
+#topHeading.glow {
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+/* Định nghĩa hạt tim bay lên từ đáy màn hình */
+.heart {
+  position: absolute;
+  bottom: 0;
+  width: 20px;
+  height: 20px;
+  /* Đổi màu tim sang đậm hơn xíu để nổi trên nền sáng */
+  background-color: #ff8fab;
+  transform: rotate(45deg);
+  animation: float 10s ease-in infinite; /* Giảm thời gian float xuống cho mượt */
+  opacity: 0.8;
+  z-index: 800; /* Đảm bảo tim bay trên ảnh nhưng dưới các overlay khác */
+}
+.heart::before, .heart::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background-color: #ff8fab;
+  border-radius: 50%;
+}
+.heart::before { top: -10px; left: 0; }
+.heart::after { left: -10px; top: 0; }
+@keyframes float {
+  from { transform: translateY(0) rotate(45deg); opacity: 0.8; }
+  to { transform: translateY(-100vh) rotate(45deg); opacity: 0; }
+}
+
+/* --- THAY ĐỔI MÀU CHỮ LỜI CHÚC --- */
+/* Ô hiện lời chúc gõ chữ */
+#message {
+  margin: 30px auto;
+  width: 85%;
+  max-width: 800px;
+  font-size: 1.4rem;
+  line-height: 1.6;
+  /* Đổi màu chữ sang màu hồng đất đậm hơn để dễ đọc trên nền sáng */
+  color: #8c4a5d;
+  min-height: 60px;
+  text-align: justify;
+  text-justify: inter-word;
+  font-weight: 500;
+  white-space: pre-line;
+}
+
+canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* Hiệu ứng chữ phát sáng - điều chỉnh lại shadow cho nền sáng */
+h1.glow {
+  color: #ff4d88;
+  /* Shadow nhẹ nhàng hơn */
+  text-shadow: 0 0 5px #fff, 0 0 15px #ffb6c1, 0 0 25px #ff69b4;
+  animation: glow 2s ease-in-out infinite alternate;
+}
+@keyframes glow {
+  from { text-shadow: 0 0 2px #fff, 0 0 10px #ffb6c1; }
+  to { text-shadow: 0 0 10px #fff, 0 0 25px #ff69b4; }
+}
+
+/* Lớp phủ yêu cầu người dùng bấm để bật nhạc */
+.audio-gate {
+  position: fixed;
+  inset: 0;
+  /* Nền của màn hình chờ */
+  background: linear-gradient(135deg, #fff0f5, #ffe4e1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 20px;
+  z-index: 2000; /* Tăng Z-index cao nhất */
+  text-align: center;
+  padding: 20px;
+  color: #d63384;
+}
+.audio-gate h2 {
+    font-size: 2rem;
+    margin: 0;
+}
+/* Nút bấm bắt đầu */
+.audio-gate button {
+  padding: 15px 40px;
+  font-size: 1.3rem;
+  font-family: Georgia, serif;
+  font-weight: bold;
+  background-color: #ff4d88;
+  color: white;
+  border: none;
+  border-radius: 30px; /* Bo tròn nhiều hơn */
+  cursor: pointer;
+  transition: 0.3s;
+  box-shadow: 0 5px 15px rgba(255, 77, 136, 0.4);
+}
+.audio-gate button:hover {
+    background-color: #ff3377;
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(255, 77, 136, 0.6);
+}
+
+/* Celebration overlay */
+.icons-pop { position: relative; width: 100%; height: 100%; pointer-events: none; }
+.icon-burst { position: absolute; font-size: clamp(28px, 6vw, 64px); opacity: 0; transform: scale(0.3) translate(-50%, -50%); animation: popIn 500ms ease-out forwards, fadeOut 350ms ease-in forwards 550ms; z-index: 1501; }
+@keyframes popIn {
+  0% { opacity: 0; transform: scale(0.3) translate(-50%, -50%) rotate(-10deg); }
+  60% { opacity: 1; transform: scale(1.08) translate(-50%, -50%) rotate(6deg); }
+  100% { opacity: 1; transform: scale(1) translate(-50%, -50%) rotate(0deg); }
+}
+@keyframes fadeOut {
+  0% { opacity: 1; filter: blur(0px); }
+  100% { opacity: 0; filter: blur(2px); }
+}
+/* Hide content while celebrating */
+.content-hidden { visibility: hidden; opacity: 0; transition: opacity 0.5s; }
+
+/* Scene transition */
+.scene-enter { opacity: 0; filter: blur(6px); transform: scale(0.98); }
+.scene-enter-active { transition: opacity 1200ms ease, filter 1200ms ease, transform 1200ms ease; opacity: 1; filter: blur(0); transform: scale(1); }
+
+/* Rendering hints */
+#fireworksCanvas, #confettiCanvas { image-rendering: optimizeQuality; will-change: transform; }
+@media (min-width: 1024px) {
+  .icon-burst { font-size: clamp(36px, 5.2vw, 72px); }
+}
+
+/* Center video sizing for 1:1 square */
+#videoCenterWrap { backdrop-filter: blur(5px); }
+#celebrationVideo { outline: none; border-radius: 20px; }
+
+/* --- SỬA LỖI KHUNG ẢNH --- */
+/* Single image block - Đã xóa nền đen */
+.single-image {
+    width: min(900px, 92vw);
+    margin: 40px auto;
+    border-radius: 20px;
+    /* background: #121212;  <- Xóa dòng này */
+    background: transparent; /* Thay bằng trong suốt */
+    aspect-ratio: 16/9;
+    position: relative;
+    /* Xóa shadow cũ, không cần thiết khi nền trong suốt */
+    /* box-shadow: 0 0px 0px rgba(0,0,0,0.18); */
+}
+
+/* Photo-card layout - Làm mềm shadow của các tấm ảnh */
+.photo-card {
+    position: absolute;
+    border-radius: 15px;
+    overflow: hidden;
+    /* Shadow mềm mại hơn màu hồng */
+    box-shadow: 0 8px 20px rgba(255, 182, 193, 0.4), 0 4px 8px rgba(0,0,0,0.05);
+    transition: transform 0.3s ease;
+    background: #fff;
+}
+/* Hiệu ứng tương tác nhẹ khi di chuột vào ảnh */
+.photo-card:hover {
+    transform: scale(1.03);
+    z-index: 10;
+}
+.photo-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* Example positions/sizes — adjust freely */
+.photo-card.a { width: 42%; height: 50%; left: 4%; top: 10%; z-index: 2;}
+.photo-card.b { width: 32%; height: 42%; right: 4%; top: 15%; z-index: 3;}
+.photo-card.c { width: 25%; height: 45%; left: 3%; bottom: 5%; z-index: 4;}
+.photo-card.d { width: 20%; height: 40%; left: 45%; top: 5%; z-index: 1;}
+.photo-card.e { width: 28%; height: 38%; right: 6%; bottom: 8%; z-index: 5;}
+
+/* Stars overlay - Điều chỉnh màu sao cho nền sáng */
+#starsLayer { position: fixed; inset: 0; pointer-events: none; z-index: 900; overflow: hidden; }
+.star {
+    position: absolute;
+    width: 8px; height: 8px;
+    /* Đổi màu sao sang vàng nhạt/hồng để nổi trên nền trắng */
+    background: radial-gradient(circle, #fff9c4 0%, #ffcccb 60%, rgba(255,255,255,0) 70%);
+    border-radius: 50%;
+    /* Shadow màu vàng ấm */
+    filter: drop-shadow(0 0 6px #fff) drop-shadow(0 0 8px #ffd700);
+    opacity: 0.9;
+    will-change: transform, opacity, left, top;
+}
+
+/* Hearts fixed background layer */
+#heartsLayer { position: fixed; inset: 0; pointer-events: none; z-index: 850; overflow: hidden; }
+
+/* ensure hearts are positioned inside the fixed layer */
+.heart { position: absolute; bottom: 0; }
+
+/* Ẩn trên mobile để tối ưu hiệu năng nếu cần */
+@media (max-width: 768px) {
+    #starsLayer { display: none; }
+    .heart { width: 15px; height: 15px; }
+}
+
+/* --- BỐ CỤC ALBUM MỚI: POLAROID WALL --- */
+/* Container chính chứa album */
+.gallery-container {
+    width: 90%;
+    max-width: 1000px;
+    margin: 50px auto;
+    /* Sử dụng column để tạo bố cục xếp gạch (Masonry) */
+    column-count: 3;
+    column-gap: 20px;
+}
+
+/* Mỗi khung ảnh Polaroid */
+.polaroid-item {
+    break-inside: avoid; /* Ngăn ảnh bị cắt đôi giữa các cột */
+    margin-bottom: 30px; /* Khoảng cách dưới */
+    background-color: white;
+    padding: 12px 12px 40px 12px; /* Padding dưới dày hơn để giống Polaroid */
+    border-radius: 4px; /* Bo góc nhẹ cho giấy ảnh */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1); /* Bóng đổ nhẹ */
+    position: relative;
+    transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.4s ease;
+    cursor: pointer;
+    /* Xoay ngẫu nhiên nhẹ để tạo cảm giác tự nhiên */
+    transform: rotate(var(--rotation));
+}
+
+/* Hình ảnh bên trong */
+.polaroid-item img {
+    width: 100%;
+    height: auto;
+    border-radius: 2px;
+    display: block;
+    object-fit: cover;
+}
+
+/* HIỆU ỨNG BĂNG DÍNH (WASHI TAPE) GIẢ LẬP */
+.polaroid-item::before {
+    content: '';
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 35%;
+    height: 25px;
+    background-color: rgba(255, 182, 193, 0.7); /* Màu băng dính hồng trong suốt */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    z-index: 10;
+    /* Tạo hiệu ứng rách 2 đầu băng dính */
+    clip-path: polygon(5% 0%, 100% 0%, 95% 100%, 0% 100%);
+}
+
+/* Băng dính màu khác nhau cho sinh động (dùng nth-child) */
+.polaroid-item:nth-child(odd)::before {
+    background-color: rgba(255, 160, 180, 0.8); /* Hồng đậm hơn */
+    transform: translateX(-50%) rotate(-3deg);
+}
+.polaroid-item:nth-child(even)::before {
+    background-color: rgba(255, 200, 210, 0.8); /* Hồng nhạt hơn */
+    transform: translateX(-50%) rotate(2deg);
+}
+
+/* Hiệu ứng khi di chuột vào ảnh */
+.polaroid-item:hover {
+    transform: scale(1.05) rotate(0deg) !important; /* Phóng to và chỉnh thẳng lại */
+    box-shadow: 0 15px 30px rgba(255, 77, 136, 0.3);
+    z-index: 50; /* Nổi lên trên cùng */
+}
+
+/* Responsive cho màn hình nhỏ (điện thoại) */
+@media (max-width: 768px) {
+    .gallery-container {
+        column-count: 2; /* 2 cột trên tablet */
+    }
+}
+@media (max-width: 480px) {
+    .gallery-container {
+        column-count: 2; /* 2 cột trên điện thoại nhỏ */
+        column-gap: 15px;
+    }
+    .polaroid-item {
+        padding: 6px 6px 25px 6px; /* Giảm độ dày viền trên mobile */
+    }
+}
+  </style>
+</head>
+<body class="pre-celebration">
+  <div id="celebrationOverlay" style="position:fixed;inset:0;background:radial-gradient(ellipse at center, rgba(255,245,248,0.95), rgba(255,230,235,0.98));display:none;align-items:center;justify-content:center;z-index:1500;">
+    <canvas id="confettiCanvas" style="position:absolute;inset:0;width:100%;height:100%;z-index:2;"></canvas>
+    <div class="icons-pop" aria-hidden="true" style="z-index:0;"></div>
+    <div id="videoCenterWrap" style="position: absolute; z-index: 1; display:flex; align-items:center; justify-content:center; width:min(80vmin, 70%); aspect-ratio:9/16; border-radius:20px; overflow:hidden; box-shadow:0 20px 40px rgba(255, 105, 180, 0.3);">
+      <video id="celebrationVideo" preload="auto" playsinline webkit-playsinline controlslist="nodownload noplaybackrate" style="width:100%; height:100%; object-fit:cover; background:#000;">
+        <source src="musc/hoa.mp4" type="video/mp4">
+      </video>
+    </div>
+    <canvas id="fireworksCanvas" style="position:absolute;inset:0;width:100%;height:100%;z-index:3;"></canvas>
+  </div>
+
+  <div id="starsLayer" aria-hidden="true"></div>
+  <div id="heartsLayer" aria-hidden="true"></div>
+
+  <audio id="bgm" preload="auto" playsinline loop>
+    <source src="musc/lmly.mp3" type="audio/mpeg">
+  </audio>
+
+  <div id="audioGate" class="audio-gate">
+    <h2>💝 Món quà nhỏ cho Meo 💝</h2>
+    <button id="playMusic">Bấm dô đây nò Meo 💖</button>
+  </div>
+
+  <div id="mainContent">
+    <h1 id="topHeading" class="glow">🎀 Happy Birthday Meo Meo 🎀</h1>
+    <h2 class="glow" style="color: #ff7ab6; margin-top: 0;">🎉 Chúc mừng sinh nhật Meo yêu 💖</h2>
+
+    <div id="message"></div>
+
+    <div class="gallery-container">
+      <div class="polaroid-item" style="--rotation: -2deg;">
+        <img src="images/cat1.png" alt="Kỷ niệm 1">
+      </div>
+      <div class="polaroid-item" style="--rotation: 3deg;">
+        <img src="images/cat3.png" alt="Kỷ niệm 3">
+      </div>
+      <div class="polaroid-item" style="--rotation: -1deg;">
+        <img src="images/cat0.png" alt="Kỷ niệm 4">
+      </div>
+      <div class="polaroid-item" style="--rotation: 4deg;">
+        <img src="images/cat4.png" alt="Kỷ niệm 5">
+      </div>
+      <div class="polaroid-item" style="--rotation: -3deg;">
+        <img src="images/cat5.png" alt="Kỷ niệm 6">
+      </div>
+      <div class="polaroid-item" style="--rotation: 2deg;">
+        <img src="images/cat6.png" alt="Kỷ niệm 7">
+      </div>
+      <div class="polaroid-item" style="--rotation: -4deg;">
+        <img src="images/cat7.png" alt="Kỷ niệm 8">
+      </div>
+      <div class="polaroid-item" style="--rotation: 1deg;">
+        <img src="images/cat8.png" alt="Kỷ niệm 9">
+      </div>
+      <div class="polaroid-item" style="--rotation: -2deg;">
+        <img src="images/cat9.png" alt="Kỷ niệm 10">
+      </div>
+      <div class="polaroid-item" style="--rotation: 3deg;">
+        <img src="images/cat111.png" alt="Kỷ niệm 11">
+      </div>
+     
+    </div>
+  </div>
+
+
+  <script>
+// Khởi tạo biến và tương thích AudioContext
+const bgmEl = document.getElementById('bgm');
+const gateEl = document.getElementById('audioGate');
+const playBtn = document.getElementById('playMusic');
+const ACtx = window.AudioContext || window.webkitAudioContext;
+let audioCtx = null;
+
+const overlayEl = document.getElementById('celebrationOverlay');
+const fwCanvas = document.getElementById('fireworksCanvas');
+const confettiCanvas = document.getElementById('confettiCanvas');
+const DPR = Math.max(1, Math.min(2, window.devicePixelRatio || 1)); // cap at 2 for perf on iPad
+const iconsLayer = document.querySelector('.icons-pop');
+const mainContent = document.getElementById('mainContent');
+const videoEl = document.getElementById('celebrationVideo');
+
+// ==== Configurable Stars Generator (4 directions) ====
+const STAR_CONFIG = {
+  enabled: true,          // bật/tắt sao
+  direction: 'top',       // 'top' | 'bottom' | 'left' | 'right'
+  spawnInterval: 300,     // Tăng thời gian spawn để sao thưa hơn trên nền sáng
+  maxConcurrent: 80,     // Giảm số lượng sao
+  speedMin: 40,           // px/s
+  speedMax: 100,          // px/s
+  sizeMin: 3,             // px - sao nhỏ lại xíu
+  sizeMax: 8,            // px
+  fadeOut: true
+};
+
+const starsLayer = document.getElementById('starsLayer');
+let starTimer = null;
+let starCount = 0;
+
+function startStars() {
+  if (!STAR_CONFIG.enabled || starTimer) return;
+  // Chỉ bật sao trên màn hình lớn hơn 768px để đỡ rối
+  if (window.innerWidth > 768) {
+      starTimer = setInterval(spawnStar, STAR_CONFIG.spawnInterval);
+  }
+}
+function stopStars() { if (starTimer) { clearInterval(starTimer); starTimer = null; } }
+
+function spawnStar() {
+  if (starCount >= STAR_CONFIG.maxConcurrent) return;
+  const s = document.createElement('div');
+  s.className = 'star';
+  const size = STAR_CONFIG.sizeMin + Math.random() * (STAR_CONFIG.sizeMax - STAR_CONFIG.sizeMin);
+  s.style.width = size + 'px'; s.style.height = size + 'px';
+
+  const dir = STAR_CONFIG.direction;
+  const vw = window.innerWidth; const vh = window.innerHeight;
+  let x=0, y=0, dx=0, dy=0, dist=0;
+  const speed = STAR_CONFIG.speedMin + Math.random() * (STAR_CONFIG.speedMax - STAR_CONFIG.speedMin); // px/s
+
+  if (dir === 'top') { x = Math.random() * vw; y = -12; dx = 0; dy = 1; dist = vh + 24; }
+  else if (dir === 'bottom') { x = Math.random() * vw; y = vh + 12; dx = 0; dy = -1; dist = vh + 24; }
+  else if (dir === 'left') { x = -12; y = Math.random() * vh; dx = 1; dy = 0; dist = vw + 24; }
+  else { x = vw + 12; y = Math.random() * vh; dx = -1; dy = 0; dist = vw + 24; }
+
+  s.style.left = x + 'px';
+  s.style.top = y + 'px';
+
+  starsLayer.appendChild(s);
+  starCount++;
+
+  const durationMs = Math.max(800, Math.min(8000, (dist / speed) * 1000));
+  s.style.transition = `transform ${durationMs}ms linear, opacity ${Math.min(1200, durationMs)}ms linear`;
+  const tx = dx * dist; const ty = dy * dist;
+  requestAnimationFrame(() => {
+    if (STAR_CONFIG.fadeOut) s.style.opacity = '0';
+    s.style.transform = `translate(${tx}px, ${ty}px)`;
+  });
+
+  const cleanup = () => { s.removeEventListener('transitionend', cleanup); s.remove(); starCount = Math.max(0, starCount - 1); };
+  s.addEventListener('transitionend', cleanup);
+  setTimeout(() => { if (s.isConnected) cleanup(); }, durationMs + 50);
+}
+
+// Hiện/ẩn lớp phủ bật nhạc
+function showGate() { gateEl.style.display = 'flex'; }
+function hideGate() {
+    gateEl.style.opacity = '0';
+    gateEl.style.transition = 'opacity 0.5s ease';
+    setTimeout(() => { gateEl.style.display = 'none'; }, 500);
+}
+
+// Mở khóa audio theo chính sách trình duyệt và phát nhạc nền
+async function unlockAndPlay(triggered = false) {
+  try {
+    if (ACtx) {
+      if (!audioCtx) audioCtx = new ACtx();
+      if (audioCtx.state === 'suspended') await audioCtx.resume();
+    }
+  } catch (_) {}
+
+  try {
+    bgmEl.muted = false;
+    bgmEl.volume = 0.7; // Đặt âm lượng vừa phải
+    if (bgmEl.paused) {
+      bgmEl.currentTime = 0;
+      await bgmEl.play();
+    }
+    hideGate();
+    // Show overlay immediately and keep main content hidden to avoid flash
+    overlayEl.style.display = 'flex';
+    if (mainContent) mainContent.classList.add('content-hidden');
+    // Prepare video source and attempt to play with user gesture unlocked
+    if (videoEl) {
+      try {
+        videoEl.src = 'musc/hoa.mp4';
+        videoEl.currentTime = 0;
+        videoEl.muted = true; // start muted to satisfy autoplay policies
+        videoEl.load();
+        await videoEl.play();
+        // try to unmute shortly after playback starts
+        setTimeout(() => { try { videoEl.muted = false; videoEl.removeAttribute('controls'); } catch(_) {} }, 150);
+      } catch (_) { /* fallback: will retry in startCelebration */ }
+    }
+    startCelebration();
+  } catch (e) {
+    console.log("Autoplay failed, showing controls", e);
+    bgmEl.controls = true;
+    hideGate();
+  }
+}
+
+// Celebration sequence: fireworks + popping icons, then reveal content
+function startCelebration() {
+  // Hide main content during celebration
+  if (mainContent) mainContent.classList.add('content-hidden');
+  // Overlay already visible from unlockAndPlay
+  // Resize canvas
+  resizeCanvas();
+
+  // Center video play with audio after unlocking
+  if (videoEl) {
+    try {
+      if (!videoEl.src) videoEl.src = 'musc/hoa.mp4';
+      videoEl.currentTime = 0;
+      videoEl.muted = true; // start muted first
+      videoEl.load();
+      const p = videoEl.play();
+      if (p && typeof p.then === 'function') {
+        p.then(() => {
+          // unmute shortly after playback begins and hide controls
+          setTimeout(() => { try { videoEl.muted = false; videoEl.removeAttribute('controls'); } catch(_) {} }, 150);
+        }).catch(() => {
+          // fallback: show controls to let user tap play
+          try { videoEl.setAttribute('controls', ''); } catch(_) {}
+        });
+      }
+      // also try to unmute on canplay (extra safety on Safari)
+      const once = () => { try { videoEl.muted = false; } catch(_) {} videoEl.removeEventListener('canplay', once); };
+      videoEl.addEventListener('canplay', once);
+    } catch (_) {}
+  }
+
+  window.addEventListener('resize', resizeCanvas);
+  // Start animations
+  startFireworks();
+  startConfetti();
+  popIconsBurst();
+  // Stop after duration and reveal content
+  const DURATION = 9500; // ms
+  setTimeout(() => {
+    overlayEl.style.opacity = '0'; // Fade out overlay
+    overlayEl.style.transition = 'opacity 0.8s ease';
+    
+    setTimeout(() => {
+         overlayEl.style.display = 'none';
+         window.removeEventListener('resize', resizeCanvas);
+         stopFireworks();
+         stopConfetti();
+         // Stop video when celebration ends
+         if (videoEl) { try { videoEl.pause(); videoEl.currentTime = 0; } catch (_) {} }
+         // Allow main content to reveal and remove pre-celebration lock
+         document.body.classList.remove('pre-celebration');
+         revealMainScene();
+    }, 800);
+
+  }, DURATION);
+}
+
+function resizeCanvas() {
+  const dpr = DPR;
+  // Fireworks
+  fwCanvas.width = Math.floor(window.innerWidth * dpr);
+  fwCanvas.height = Math.floor(window.innerHeight * dpr);
+  const fwCtx = fwCanvas.getContext('2d');
+  fwCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  // Confetti
+  if (confettiCanvas) {
+    confettiCanvas.width = Math.floor(window.innerWidth * dpr);
+    confettiCanvas.height = Math.floor(window.innerHeight * dpr);
+    const cctx = confettiCanvas.getContext('2d');
+    cctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+}
+
+// Simple fireworks
+let fwRAF = null;
+let particles = [];
+function startFireworks() {
+  const ctx = fwCanvas.getContext('2d');
+  // Thêm màu hồng phấn vào bảng màu pháo hoa
+  const colors = ['#ff4d88', '#ffd166', '#ff9eb5', '#ffb6c1', '#f72585', '#ffc2d1'];
+  const GRAV = 0.06;
+  const DRAG = 0.985;
+  const TRAIL_ALPHA = 0.18;
+
+  const area = window.innerWidth * window.innerHeight;
+  const densityFactor = Math.min(2.0, Math.max(0.6, area / (1920 * 1080)));
+
+  function spawnFirework() {
+    const x = 80 + Math.random() * (window.innerWidth - 160);
+    const y = window.innerHeight * (0.35 + Math.random() * 0.35);
+    const base = 60 + Math.floor(Math.random() * 30);
+    const count = Math.floor(base * (0.8 + Math.random() * 0.6) * densityFactor);
+    const hue = colors[Math.floor(Math.random() * colors.length)];
+    for (let i = 0; i < count; i++) {
+      const angle = (Math.PI * 2 * i) / count + (Math.random() * 0.08);
+      const speed = 2.2 + Math.random() * 3.8;
+      particles.push({ x, y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed, life: 70 + Math.random() * 40, color: hue, size: 2 + Math.random() * 2 });
+    }
+  }
+
+  function step() {
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.fillStyle = `rgba(255,250,250,${TRAIL_ALPHA})`; // Trail màu trắng mờ cho nền sáng
+    ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+    if (Math.random() < 0.10 * densityFactor) spawnFirework();
+    ctx.globalCompositeOperation = 'lighter';
+    particles.forEach(p => {
+      p.vx *= DRAG; p.vy = p.vy * DRAG + GRAV; p.x += p.vx; p.y += p.vy; p.life -= 1;
+      const alpha = Math.max(0, Math.min(1, p.life / 80));
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = p.color;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      ctx.fill();
+    });
+    particles = particles.filter(p => p.life > 0);
+    fwRAF = requestAnimationFrame(step);
+  }
+  step();
+}
+
+function stopFireworks() {
+  if (fwRAF) cancelAnimationFrame(fwRAF);
+  const ctx = fwCanvas.getContext('2d');
+  ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+  particles = [];
+  fwRAF = null;
+}
+
+// Confetti rain
+let confettiRAF = null;
+let confetti = [];
+function startConfetti() {
+  if (!confettiCanvas) return;
+  const ctx = confettiCanvas.getContext('2d');
+  confetti = [];
+  const area = window.innerWidth * window.innerHeight;
+  const density = Math.floor(160 * Math.min(2.2, Math.max(0.7, area / (1920 * 1080))));
+  for (let i = 0; i < density; i++) {
+    confetti.push({
+      x: Math.random() * window.innerWidth,
+      y: -Math.random() * window.innerHeight,
+      vy: 1.2 + Math.random() * 2.2,
+      vx: -0.6 + Math.random() * 1.2,
+      r: 2 + Math.random() * 3,
+      // Sử dụng tông màu hồng/vàng/pastel cho confetti
+      color: `hsl(${330 + Math.random() * 40}, ${70 + Math.random()*30}%, ${60 + Math.random()*20}%)`,
+      a: Math.random() * Math.PI * 2,
+      spin: -0.15 + Math.random() * 0.3
+    });
+  }
+  function step() {
+    ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+    confetti.forEach(c => {
+      c.x += c.vx; c.y += c.vy; c.a += c.spin;
+      if (c.y > window.innerHeight + 10) { c.y = -10; c.x = Math.random() * window.innerWidth; }
+      ctx.save();
+      ctx.translate(c.x, c.y);
+      ctx.rotate(Math.sin(c.a) * 0.6);
+      ctx.fillStyle = c.color;
+      ctx.fillRect(-c.r, -c.r, c.r*2.2, c.r*2.2);
+      ctx.restore();
+    });
+    confettiRAF = requestAnimationFrame(step);
+  }
+  step();
+}
+function stopConfetti() {
+  if (confettiRAF) cancelAnimationFrame(confettiRAF);
+  if (confettiCanvas) confettiCanvas.getContext('2d').clearRect(0,0,window.innerWidth,window.innerHeight);
+  confettiRAF = null; confetti = [];
+}
+
+// Helper to reveal main content with transition and start effects
+function revealMainScene() {
+  if (!mainContent) return;
+  mainContent.classList.add('scene-enter');
+  mainContent.classList.remove('content-hidden');
+  requestAnimationFrame(() => {
+    mainContent.classList.add('scene-enter-active');
+    setTimeout(() => {
+      setTimeout(typeEffect, 400);
+      startHearts();
+      startStars();
+      mainContent.classList.remove('scene-enter');
+      mainContent.classList.remove('scene-enter-active');
+    }, 1200);
+  });
+}
+
+const ICONS = ['🎉','🎊','💖','✨','🎈','🥳','🌸','🍬','😻','😽','💋','🎂','🎀','🎁'];
+
+function basePopOneIconDistributed(used) {
+  const el = document.createElement('div');
+  el.className = 'icon-burst';
+  el.textContent = ICONS[Math.floor(Math.random() * ICONS.length)];
+  let tries = 0; let x = 50, y = 50; const minDist = 14;
+  function sampleEdgeBiased() {
+    const edgeBias = Math.random() < 0.7;
+    if (edgeBias) {
+      const edge = Math.floor(Math.random()*4);
+      const marginVW = 4;
+      const marginVH = 6;
+      switch(edge) {
+        case 0: x = 6 + Math.random() * 88; y = marginVH; break;
+        case 1: x = 100 - marginVW; y = 10 + Math.random() * 78; break;
+        case 2: x = 6 + Math.random() * 88; y = 100 - marginVH; break;
+        default: x = marginVW; y = 10 + Math.random() * 78; break;
+      }
+    } else {
+      x = 6 + Math.random() * 88;
+      y = 10 + Math.random() * 78;
+    }
+  }
+  do {
+    sampleEdgeBiased();
+    tries++;
+  } while (used.some(p => Math.hypot(p.x - x, p.y - y) < minDist) && tries < 20);
+  used.push({ x, y });
+  el.style.left = x + 'vw';
+  el.style.top = y + 'vh';
+  el.style.animationDelay = Math.floor(Math.random()*200) + 'ms';
+  iconsLayer.appendChild(el);
+  setTimeout(() => el.remove(), 900);
+}
+let popOneIconDistributed = basePopOneIconDistributed;
+
+function popIconsBurst() {
+  const area = window.innerWidth * window.innerHeight;
+  const targetConcurrent = Math.max(10, Math.floor(18 * Math.min(2.0, Math.max(0.8, area / (834 * 1194)))));
+  let active = 0;
+  let stopped = false;
+  const stopObserver = new MutationObserver(() => {
+    if (overlayEl.style.display === 'none') {
+      stopped = true;
+      stopObserver.disconnect();
+    }
+  });
+  stopObserver.observe(overlayEl, { attributes: true, attributeFilter: ['style'] });
+
+  function spawnOne() {
+    if (stopped) return;
+    active++;
+    popOneIconDistributed([]);
+    const nextDelay = 120 + Math.random() * 180;
+    setTimeout(() => {
+      if (active < targetConcurrent && !stopped) spawnOne();
+    }, nextDelay);
+  }
+
+  const originalPop = popOneIconDistributed;
+  popOneIconDistributed = function(used) {
+    const el = document.createElement('div');
+    el.className = 'icon-burst';
+    el.textContent = ICONS[Math.floor(Math.random() * ICONS.length)];
+    let tries = 0; let x = 50, y = 50; const minDist = 14;
+    function sampleEdgeBiased() {
+      const edgeBias = Math.random() < 0.7;
+      const edge = Math.floor(Math.random()*4);
+      const marginVW = 4;
+      const marginVH = 6;
+      switch(edge) {
+        case 0: x = 6 + Math.random() * 88; y = marginVH; break;
+        case 1: x = 100 - marginVW; y = 10 + Math.random() * 78; break;
+        case 2: x = 6 + Math.random() * 88; y = 100 - marginVH; break;
+        default: x = marginVW; y = 10 + Math.random() * 78; break;
+      }
+    }
+    do {
+      sampleEdgeBiased();
+      tries++;
+    } while (used.some(p => Math.hypot(p.x - x, p.y - y) < minDist) && tries < 20);
+    used.push({ x, y });
+    el.style.left = x + 'vw';
+    el.style.top = y + 'vh';
+    el.style.animationDelay = Math.floor(Math.random()*120) + 'ms';
+    iconsLayer.appendChild(el);
+    const totalLifetime = 950;
+    setTimeout(() => {
+      el.remove();
+      active = Math.max(0, active - 1);
+      if (!stopped) {
+        spawnOne();
+      }
+    }, totalLifetime + 120);
+  };
+
+  for (let i = 0; i < targetConcurrent; i++) {
+    setTimeout(spawnOne, i * 80);
+  }
+}
+
+if (playBtn) playBtn.addEventListener('click', () => unlockAndPlay(true));
+
+const text = `Hôm nay là ngày đặc biệt của Meo. Húi ngồi đây và code :>> về từng khoảnh khắc của tụi mình. Nghĩ về lúc Meo của Húi cười, giọng nói của Meo, mỗi lần Meo và Húi tụi mình gọi video. Những thứ đó đều làm Húi ấm áp, hạnh phúc hơn mỗi ngày. Chúc mừng sinh nhật Thư Meo, cục cưng cục meo của Húi nhe.
+
+Sang tuổi mới Húi chúc Meo nhiều sức khỏe, nhiều bình yên, nhiều niềm vui. Meo đã xinh rồi mà còn xinh hơn nữa. Húi thương Meo theo từng ngày. Huông từ cách Meo nói chuyện, cách Meo suy nghĩ. Tất cả đều làm Húi muốn ôm Meo trong tay hun cho Meo Meo nhìu cái lun.
+
+Húi biết bây giờ tụi mình vẫn còn xa. Khoảng cách đôi khi làm hai đứa nhớ nhau nhìu hơn. Nhưng Húi ham bỏ. Húi luôn ở đây, lun hướng về tụi mình. Húi hứa sẽ chăm Meo bằng tất cả những gì Húi có thể làm được. Dù là quan tâm, hỏi han, dù là chọc cho Meo cười hay cọc (vô tình) :,>>, hay là ở yên đó nghe Meo kể chuyện. Húi muốn Meo biết Meo không bao giờ phải một mình.
+
+Húi nhớ Meo nhiều lắm. Nhớ cái ôm của Meo, nhớ cảm giác Meo hun hun Húi đã nhắm, nhớ cái lúc Meo nắm tay Húi. Húi mong ngày tụi mình gặp lại để Húi ôm Meo xiết hơn nữa. Để tụi mình đi chơi, ăn uống, chụp hình, và nhất là để Húi được nhìn Meo ngoài đời ngay trước mặt hơn là màn hình điện thoại.
+
+Meo à, cảm ơn Meo đã bước vào cuộc sống của Húi. Cảm ơn Meo đã xuất hiện đúng lúc. Cảm ơn Meo đã thương Húi theo cách riêng của Meo. Húi trân trọng từng chút một đớ.
+
+Sinh nhật hôm nay Húi mong Meo hạnh phúc với Húi. Và Húi mong mỗi năm sau này, Húi đều có mặt để chúc sinh nhật Meo bằng một cái ôm thiệt chặt.
+
+Huông Meo nhắm. Huông nhiều hơn Meo tưởng nhunn.
+Húi của Meo. Moazz 💋🤍`;
+let i = 0;
+function typeEffect() {
+  if (i < text.length) {
+    document.getElementById('message').innerHTML += text.charAt(i);
+    i++;
+    setTimeout(typeEffect, 20); // Gõ nhanh hơn một chút
+  }
+}
+
+function createHeart() {
+  const heart = document.createElement('div');
+  heart.classList.add('heart');
+  heart.style.left = Math.random() * 100 + 'vw';
+  // Tăng kích thước ngẫu nhiên cho tim
+  const scale = Math.random() * 0.5 + 0.8;
+  heart.style.transform = `scale(${scale}) rotate(45deg)`;
+  heart.style.animationDuration = (4 + Math.random() * 3) + 's';
+  const heartsLayer = document.getElementById('heartsLayer');
+  (heartsLayer || document.body).appendChild(heart);
+  setTimeout(() => heart.remove(), 7000);
+}
+
+let heartsTimer = null;
+function startHearts() {
+  if (heartsTimer) return;
+  // Giảm tần suất xuất hiện tim để không quá rối mắt trên nền sáng
+  heartsTimer = setInterval(() => { createHeart(); }, 200);
+}
+  </script>
+</body>
+</html>
