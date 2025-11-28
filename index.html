@@ -102,9 +102,9 @@
     const button = document.getElementById('giftButton');
     const message = document.getElementById('message');
 
-    // Đếm ngược tới 00:00 29/11/2025 theo giờ TP.HCM (UTC+7)
-    // Mốc UTC tương ứng: 2025-11-28T17:00:00Z
-    const targetUTC = new Date('2025-11-28T17:00:00Z').getTime();
+    // Đếm ngược tới 00:00 29/11/2025 theo giờ Úc (Sydney, Australia/Sydney - AEDT, UTC+11)
+    // Mốc UTC tương ứng: 2025-11-28T13:00:00Z
+    const targetUTC = new Date('2025-11-28T13:00:00Z').getTime();
     let timerId = null;
 
     function renderCountdown(ms) {
